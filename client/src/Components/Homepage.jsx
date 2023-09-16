@@ -1,148 +1,40 @@
 import React from 'react'
 import * as ReactBootstrap from "react-bootstrap";
 import BasicSpinner from "./BasicSpinner";
-import {useState} from 'react'
-
+import {useState, useEffect} from 'react'
+import axios from 'axios'
+import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
 
 
 const Homepage = () => {
+    const url = "http://localhost:3012/api/restaurants";
+
+
     const [load, setLoad] = useState(false);
     const [noContentCase, setNoContentCase] = useState("");
     const [searchContent, setSearchContent] = useState("");
-// const url = "";
+    const [data, setData] = useState([]);
+    const [searchInput, setSearchInput] = useState("");
 
 
-    const data = {
-        "_id": {
-          "$oid": "650564093722a2833143fdec"
-        },
-        "restaurants": [
-          {
-            "name": "La Vie",
-            "cuisine": "French",
-            "location": {
-              "city": "Hamburg",
-              "latitude": 53.55,
-              "longitude": 10,
-              "street": "123 Main Street"
-            },
-            "tags": [
-              "French",
-              "Fine Dining"
-            ],
-            "comments": [
-              {
-                "user": "User1",
-                "comment": "Excellent food and service!",
-                "rating": 5,
-                "date": "2023-09-15T10:30:00Z"
-              },
-              {
-                "user": "User2",
-                "comment": "A bit pricey, but worth it.",
-                "rating": 4,
-                "date": "2023-09-15T15:45:00Z"
-              },
-              {
-                "user": "User3",
-                "comment": "Great atmosphere.",
-                "rating": 4,
-                "date": "2023-09-16T09:15:00Z"
-              }
-            ]
-          },
-          {
-            "name": "Mami mia",
-            "cuisine": "Italian",
-            "location": {
-              "city": "Berlin",
-              "latitude": 52.52,
-              "longitude": 13.405,
-              "street": "456 Elm Street"
-            },
-            "tags": [
-              "Italian",
-              "Pizza"
-            ],
-            "comments": [
-              {
-                "user": "User4",
-                "comment": "Delicious pizza!",
-                "rating": 5,
-                "date": "2023-09-17T18:30:00Z"
-              },
-              {
-                "user": "User5",
-                "comment": "Good service too.",
-                "rating": 4,
-                "date": "2023-09-18T12:20:00Z"
-              }
-            ]
-          },
-          {
-            "name": "nanika",
-            "cuisine": "Japanese",
-            "location": {
-              "city": "Kiel",
-              "latitude": 54.3233,
-              "longitude": 10.1228,
-              "street": "789 Oak Avenue"
-            },
-            "tags": [
-              "Japanese",
-              "Sushi"
-            ],
-            "comments": [
-              {
-                "user": "User6",
-                "comment": "Fresh sushi!",
-                "rating": 5,
-                "date": "2023-09-16T14:55:00Z"
-              },
-              {
-                "user": "User7",
-                "comment": "Quick service.",
-                "rating": 4,
-                "date": "2023-09-17T10:10:00Z"
-              }
-            ]
-          }
-        ]
-      }
 
-    //   const getSearchResults = async () => {
-    //     try{
-    //       setLoading(true);
-    //       const client = contentful.createClient({
-    //         space: space,
-    //         accessToken: accessToken,
-    //       });
-    //       const response = await client.getEntries(); 
-    //       setBreeds(response.items);
-    //     }
-    //     catch (error){
-    //       console.error
-    //     }
-    //     finally {
-    //       setLoading(false)
-    //     }
-    //   };
+   
+
     
-    //   useEffect(() => {
-    //     getSearchResults();
-    //   }, []);
+
 
       const handleSubmit = async (event) => {
         event.preventDefault();
     
         try{
             setLoad(!load);
-            // const getData = await axios.get(url);
+            const data = await axios.get(url);
             
             if(!data) throw new Error("Request failed with a status of ${getData.status}");
-            const response = await data.restaurants; //data already an array
-           
-            console.log(data.restaurants);
+            const response = await data.data; //data already an array
+           setData(response);
+            console.log(response);
             if(response.length > 0) {
                 setLoad(load);
             } else if(response.length === 0) {
@@ -154,9 +46,18 @@ const Homepage = () => {
         }
     }
 
+    
+    useEffect(() => {
+        handleSubmit;
+    }, [])
+
+    
     const handleSearch = (event) => {
         setSearchContent(event.target.value);
     }
+    
+    
+   
 
 
 
@@ -173,23 +74,29 @@ const Homepage = () => {
 
 
     <form onSubmit={handleSubmit}>
-    
-            <input type="text" id="search"  placeholder="Find a restaurant" onChange={handleSearch} ></input>
+            <input type="text" id="search" placeholder="Find a restaurant" onChange={handleSearch} value={searchContent} ></input>
             <button type="submit">Search</button>
-        </form>
+    </form>
 
-    <p>{data.restaurants[0].name}</p>
+
     {load ? (<BasicSpinner  />) : null}
-            <h4>{noContentCase}</h4>
-            {data.length ? (
-            data.restaurants.map((response) => (
-                <ul key={response.name}>
-                <li>{response.name}</li>
-                </ul>
+    <h4>{noContentCase}</h4>
+    
+            
+    {data.length ? (data.map((response) => (
+     <Card key={response.id} style={{ width: '5rem' }}>
+      <Card.Img variant="top" src={response.img} />
+      <Card.Body>
+        <Card.Title>{response.name}</Card.Title>
+        <Card.Text>{response.location.city}, {response.location.street}</Card.Text>
+        <Button variant="primary">See details</Button>
+      </Card.Body>
+    </Card>
             )) 
             ) : (
                 <h4>What do you want to know?</h4>
             )}
+           
    
    
    </div>
