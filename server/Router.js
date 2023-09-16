@@ -46,8 +46,7 @@ router.get('/restaurants/city/:city', async(req, res) => {
 router.get('/restaurants/tag/:tag', async(req, res) => {
     const tag = req.params.tag;
      try {
-        const restaurant = await db.collection('restaurants').find({"tags": tag.charAt(0).toUpperCase()
-        + tag.slice(1)}).toArray();
+        const restaurant = await db.collection('restaurants').find({"tags": tag}).toArray();
          res.status(200).json(restaurant);
     } catch (error) {
         console.log(error);

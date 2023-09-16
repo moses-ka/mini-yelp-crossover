@@ -5,6 +5,7 @@ import {useState, useEffect} from 'react'
 import axios from 'axios'
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
+import {Link} from 'react-router-dom'
 
 
 const Homepage = () => {
@@ -14,13 +15,12 @@ const Homepage = () => {
     const [load, setLoad] = useState(false);
     const [noContentCase, setNoContentCase] = useState("");
     const [searchContent, setSearchContent] = useState("");
+    const [location, setLocation] = useState("");
     const [data, setData] = useState([]);
     const [displayAll, setDisplayAll] = useState([]);
     const [searchInput, setSearchInput] = useState("");
 
 
-
-   
 
 
     const fetchApi = async () => {    
@@ -53,13 +53,11 @@ const Homepage = () => {
         event.preventDefault();
         try{
             setLoad(!load);
-            const data = await axios.get(`http://localhost:3012/api/restaurants/tag/${searchContent}`);
-            
+            const data = await axios.get(`http://localhost:3012/api/restaurants/tag/${searchContent.toLowerCase()}`);
             if(!data) throw new Error("Request failed with a status of ${getData.status}");
             const response = await data.data; 
-          
+          console.log(response);
             setDisplayAll(response);
-            console.log(response);
             if(response.length > 0) {
                 setLoad(load);
             } else if(response.length === 0) {
@@ -76,13 +74,15 @@ const Homepage = () => {
         handleSubmit();
     }, [])
 
+
     
     const handleSearch = (event) => {
         setSearchContent(event.target.value);
     }
+    console.log(searchContent);
+
+
     
-    
-   
 
 
 
@@ -100,7 +100,7 @@ const Homepage = () => {
 
     <form onSubmit={handleSubmit}>
             <input type="text" id="search" placeholder="Find a restaurant" onChange={handleSearch} value={searchContent} ></input>
-            <button type="submit">Search</button>
+             <button type="submit">Search</button>
     </form>
 
 
@@ -109,12 +109,14 @@ const Homepage = () => {
     
             
     {data.length ? (data.map((response) => (
-     <Card key={response.id} style={{ width: '5rem' }}>
-      <Card.Img variant="top" src={response.img} />
+        <Card className="card" key={response.id} style={{ width: '50rem' }}>
+        <Card.Img variant="top" src={response.img}  style ={{width: '90%'}}/>
+     
       <Card.Body>
         <Card.Title>{response.name}</Card.Title>
         <Card.Text>{response.location.city}, {response.location.street}</Card.Text>
-        <Button variant="primary">See details</Button>
+        <Button 
+        variant="primary">See details</Button>
       </Card.Body>
     </Card>
             )) 
@@ -124,12 +126,12 @@ const Homepage = () => {
            <div>
 
            {displayAll.length ? (displayAll.map((response) => (
-            <Card key={response.id} style={{ width: '5rem' }}>
-            <Card.Img variant="top" src={response.img} />
+            <Card key={response.id} style={{ width: '50rem' }}>
+            <Card.Img variant="top" src={response.img} style ={{width: '90%'}}/>
             <Card.Body>
              <Card.Title>{response.name}</Card.Title>
             <Card.Text>{response.location.city}, {response.location.street}</Card.Text>
-            <Button variant="primary">See details</Button>
+            <Link to={`details/${response.id}`}><Button variant="primary">See details</Button></Link>
              </Card.Body>
         </Card>
            ))) : null}

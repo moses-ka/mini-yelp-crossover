@@ -24,11 +24,25 @@ a:hover {
 }
 
 body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-left: 30%;
+  background-color: gray;
   margin: 0;
   display: flex;
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+}
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+    align-items: center;
+
+  background-color: white !important;
 }
 
 h1 {
