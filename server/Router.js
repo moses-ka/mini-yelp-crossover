@@ -33,7 +33,7 @@ router.get('/restaurants/city/:city', async(req, res) => {
  
     try {
         const restaurant = await db.collection('restaurants').find({"location.city": city}).toArray();
-        console.log( restaurant , 'restaurant')
+        
        
          res.status(200).json(restaurant);
     } catch (error) {
