@@ -12,18 +12,36 @@ router.get('/restaurants', async(req, res) => {
     }
 }
 );
-
+http://localhost:3012/api/restaurants/hamburg
 router.get('/restaurants/:id', async(req, res) => {
     const id = req.params.id;
-    console.log(id)
+ 
     try {
-        const restaurant = await db.collection('restaurants').find({_id: id});
-        console.log(`restaurant : ${restaurant}`)
+        const restaurant = await db.collection('restaurants').find({id: id}).toArray();
+        
+       
          res.status(200).json(restaurant);
     } catch (error) {
         console.log(error);
     }
 }
+
 );
+// http://localhost:3012/api/restaurants/city/Berlin
+router.get('/restaurants/city/:city', async(req, res) => {
+    const city = req.params.city;
+ 
+    try {
+        const restaurant = await db.collection('restaurants').find({"location.city": city}).toArray();
+        console.log( restaurant , 'restaurant')
+       
+         res.status(200).json(restaurant);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+);
+
 
 export default router;
