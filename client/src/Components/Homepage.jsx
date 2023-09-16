@@ -15,25 +15,50 @@ const Homepage = () => {
     const [noContentCase, setNoContentCase] = useState("");
     const [searchContent, setSearchContent] = useState("");
     const [data, setData] = useState([]);
+    const [displayAll, setDisplayAll] = useState([]);
     const [searchInput, setSearchInput] = useState("");
 
 
 
    
 
-    
 
-
-      const handleSubmit = async (event) => {
-        event.preventDefault();
-    
+    const fetchApi = async () => {    
         try{
             setLoad(!load);
             const data = await axios.get(url);
             
             if(!data) throw new Error("Request failed with a status of ${getData.status}");
             const response = await data.data; //data already an array
-           setData(response);
+           setDisplayAll(response);
+            console.log(response);
+            if(response.length > 0) {
+                setLoad(load);
+            } else if(response.length === 0) {
+                setLoad(load);
+                setNoContentCase("no results found");
+            }
+        }catch(error) {
+            console.log(error.message);
+        }
+    }
+
+    useEffect(() => {
+        fetchApi();
+    }, [])
+    
+
+
+      const handleSubmit = async (event) => {
+        event.preventDefault();
+        try{
+            setLoad(!load);
+            const data = await axios.get(`http://localhost:3012/api/restaurants/tag/${searchContent}`);
+            
+            if(!data) throw new Error("Request failed with a status of ${getData.status}");
+            const response = await data.data; 
+          
+            setDisplayAll(response);
             console.log(response);
             if(response.length > 0) {
                 setLoad(load);
@@ -48,7 +73,7 @@ const Homepage = () => {
 
     
     useEffect(() => {
-        handleSubmit;
+        handleSubmit();
     }, [])
 
     
@@ -96,7 +121,20 @@ const Homepage = () => {
             ) : (
                 <h4>What do you want to know?</h4>
             )}
-           
+           <div>
+
+           {displayAll.length ? (displayAll.map((response) => (
+            <Card key={response.id} style={{ width: '5rem' }}>
+            <Card.Img variant="top" src={response.img} />
+            <Card.Body>
+             <Card.Title>{response.name}</Card.Title>
+            <Card.Text>{response.location.city}, {response.location.street}</Card.Text>
+            <Button variant="primary">See details</Button>
+             </Card.Body>
+        </Card>
+           ))) : null}
+           </div>
+         
    
    
    </div>

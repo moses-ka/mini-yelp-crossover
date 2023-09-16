@@ -3,10 +3,11 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import {useState, useEffect} from 'react';
 import axios from 'axios';
+import { MapContainer, TileLayer, useMap, Marker, Popup } from 'react-leaflet';
 
 const Details = (props) => {
   const { id } = useParams();
-  const url = `http://localhost:3012/api/restaurants`;
+  const url = `http://localhost:3012/api/restaurants/${id}`;
   const [load, setLoad] = useState(false);
   const [data, setData] = useState([]);
   const [name, setName] = useState("");
@@ -41,15 +42,27 @@ const Details = (props) => {
 }
 
 
-useEffect(() => {
+/*useEffect(() => {
   fetchDetails();
-}, [])
+}, [])*/
 
 
 
   return (
     <div>Details
-    <h2>{data[{id}].name}</h2>
+    <h2>{data.length > 0 ? data[0].name : null }</h2>
+
+    <MapContainer center={[51.505, -0.09]} zoom={13} scrollWheelZoom={false}>
+  <TileLayer
+    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+  />
+  <Marker position={[51.505, -0.09]}>
+    <Popup>
+      A pretty CSS3 popup. <br /> Easily customizable.
+    </Popup>
+  </Marker>
+</MapContainer>
     
     </div>
   )
