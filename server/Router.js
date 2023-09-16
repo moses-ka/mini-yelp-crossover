@@ -13,4 +13,17 @@ router.get('/restaurants', async(req, res) => {
 }
 );
 
+router.get('/restaurants/:id', async(req, res) => {
+    const id = req.params.id;
+    console.log(id)
+    try {
+        const restaurant = await db.collection('restaurants').find({_id: id});
+        console.log(`restaurant : ${restaurant}`)
+         res.status(200).json(restaurant);
+    } catch (error) {
+        console.log(error);
+    }
+}
+);
+
 export default router;
