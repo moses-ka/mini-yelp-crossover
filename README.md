@@ -31,11 +31,11 @@ Throughout the project, we achieved the following milestones:
 Conclusion
 
 This collaborative crossover project was an exploration of teamwork, communication, and technical proficiency. We hope this README provides insight into our journey and serves as an example of how diverse talents can come together to create something exceptional. Thank you for taking the time to explore our project, and we look forward to sharing more about our experiences and learnings.
-
-
 /api/restaurants   return all the restaurants
 /api/restaurants/hamburg/:id return a restaurant with by an id 
 /api/restaurants/city/Berlin return all  restaurants  in city 
 api/restaurants/tag/pizza return all restaurants with a tag 
+
+
 
 
